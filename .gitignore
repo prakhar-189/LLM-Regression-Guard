@@ -1,0 +1,83 @@
+# ───── Secrets ─────
+.env
+*.pem
+*.key
+
+# ───── Python ─────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+wheels/
+pip-wheel-metadata/
+.installed.cfg
+lib/
+lib64/
+
+# ───── Virtual environments ─────
+.venv/
+venv/
+ENV/
+env/
+.env.bak
+
+# ───── Pytest & coverage ─────
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+
+# ───── MLflow ─────
+mlruns/
+mlartifacts/
+.mlflow/
+
+# ───── DVC ─────
+/tmp/
+.dvc/tmp/
+.dvc/cache/
+
+# ───── Scorer output (regenerated every run) ─────
+scores_output/scores.json
+scores_output/*.json
+
+# ───── Generated dataset (built by build_dataset.py) ─────
+data/eval/golden_dataset.jsonl
+
+# ───── Jupyter ─────
+.ipynb_checkpoints/
+*.ipynb
+
+# ───── Docker ─────
+.dockerignore
+
+# ───── IDEs ─────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ───── OS ─────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ───── Logs ─────
+*.log
+logs/
+
+# ───── Celery ─────
+celerybeat-schedule
+celerybeat.pid
