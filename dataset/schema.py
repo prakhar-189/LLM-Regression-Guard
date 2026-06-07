@@ -10,13 +10,22 @@
 # Imports
 # ----------------------------------------------------------
 # BaseModel : The base class for creating data models in Pydantic.
-# Field : A function used to provide additional validation and metadata for model fields.
 # field_validator : A decorator used to define custom validation logic for model fields.
-# Dict : A type hint for dictionaries in Python.
-# Any : A type hint that can represent any type of data.
+# Optional : A type hint indicating that a field can be of a specified type or None.
+# Literal : A type hint that restricts a field to have one of a specified set of literal values.
 # ===============================================================
-from pydantic import BaseModel, Field, field_validator
-from typing import Dict, Any
+from pydantic import BaseModel, field_validator
+from typing import Optional, Literal
+
+
+# List of valid categories for the GoldenExample dataset.
+CATEGORIES = [
+    "factual_accuracy",
+    "refusal_behaviour",
+    "instruction_following",
+    "tone_consistency",
+    "multi_turn_coherence"
+]
 
 
 # ===============================================================
@@ -28,23 +37,30 @@ from typing import Dict, Any
 # ===============================================================
 class GoldenExample(BaseModel):
     id : str
-    Prompt : str = Field(..., min_length = 10, description = "The input prompt must be at least 10 characters.")
-    reference_response : str = Field(..., description = "The ideal target response.")
-    category :str
+    prompt : str
+    reference_response : str
+    category : Literal[
+        'factual_accuracy',
+        'refusal_behavior',
+        'instruction_following',
+        'tone_consistency',
+        'multi_turn_coherence'
+    ]
     source : str = "manual"
-    metadata : Dict[str, Any] = Field(default_factory=dict)
+    metadata : Optional[dict] = None
 
-    # Custom validator for the 'category' field to ensure it contains a valid value.
-    @field_validator('category')
-    def validate_category(cls, value):
-        allowed_categories = [
-            'factual_accuracy',
-            'refusal_behavior',
-            'instruction_following',
-            'tone_consistency',
-            'multi_turn_coherence'
-        ]
-
-        if value not in allowed_categories:
-            raise ValueError(f"Category '{value}' is invalid. Must be one of {allowed_categories}")
-        return value
+    # Validators to ensure that the prompt is sufficiently long and the reference response is not empty.
+    @field_validator("prompt")
+    @classmethod
+    def prompt_not_empty(cls, v):
+         if len(v.strip()) <=10:
+              raise ValueError("Prompt must be longer than 10 characters.")
+         return v
+    
+    # Validator to ensure that the reference response is not empty.
+    @field_validator("reference_response")
+    @classmethod
+    def reference_not_empty(cls, v):
+         if len(v.strip()) == 0:
+              raise ValueError("Reference response cannot be empty.")
+         return v
