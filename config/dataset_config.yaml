@@ -1,0 +1,20 @@
+categories:
+  - name: factual_accuracy
+    min_examples: 35
+    weight: 0.30
+  - name: refusal_behavior
+    min_examples: 30
+    weight: 0.25
+  - name: instruction_following
+    min_examples: 30
+    weight: 0.25
+  - name: tone_consistency
+    min_examples: 25
+    weight: 0.10
+  - name: multi_turn_coherence
+    min_examples: 20
+    weight: 0.10
+
+validation:
+  require_reference_response: true
+  max_prompt_tokens: 512
