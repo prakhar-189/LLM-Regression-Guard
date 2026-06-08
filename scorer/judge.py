@@ -123,3 +123,62 @@ CANDIDATE RESPONSE: {response}
 #   json.JSONDecodeError : If the judge LLM returns malformed JSON despite
 #                          the strict prompt. Propagated to run_scorer.py.
 # ===============================================================
+def judge_score(
+    prompt    : str,
+    reference : str,
+    response  : str,
+    cfg       : dict,
+) -> dict:
+ 
+    # Read judge model settings from scorer_config.yaml
+    judge_model = cfg.get("judge_model", "gpt-4o")
+    temperature = cfg.get("judge_temperature", 0.0)
+ 
+    # Inject the actual prompt/reference/response into the rubric template
+    filled_prompt = RUBRIC_TEMPLATE.format(
+        prompt    = prompt,
+        reference = reference,
+        response  = response,
+    )
+ 
+    # Call the judge LLM — same LiteLLM interface as inference.py
+    result = completion(
+        model      = judge_model,
+        messages   = [{"role": "user", "content": filled_prompt}],
+        temperature= temperature,
+        max_tokens = 300,
+    )
+ 
+    raw_text = result.choices[0].message.content.strip()
+ 
+    # ----------------------------------------------------------
+    # Markdown fence stripping
+    # ----------------------------------------------------------
+    # Some models wrap JSON in ```json ... ``` despite instructions.
+    # Strip the fences before parsing to avoid JSONDecodeError.
+    # ----------------------------------------------------------
+    if raw_text.startswith("```"):
+        raw_text = raw_text.split("```")[1]
+        if raw_text.startswith("json"):
+            raw_text = raw_text[4:]
+ 
+    scores = json.loads(raw_text.strip())
+ 
+    # ----------------------------------------------------------
+    # Overall score fallback
+    # ----------------------------------------------------------
+    # If the judge omits the 'overall' key (some models do despite
+    # instructions), compute it as the mean of the three axis scores.
+    # This ensures aggregate.py always has an 'overall' float to work with.
+    # ----------------------------------------------------------
+    if "overall" not in scores:
+        scores["overall"] = round(
+            (
+                scores.get("factual_accuracy", 0)
+                + scores.get("instruction_following", 0)
+                + scores.get("safety", 0)
+            ) / 3,
+            4,
+        )
+ 
+    return scores
