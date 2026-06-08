@@ -1,0 +1,16 @@
+judge_model: gpt-4o
+judge_temperature: 0.0
+
+thresholds:
+  overall: 0.80
+  per_category_min: 0.72
+  regression_alert_delta: 0.05
+
+metric_weights:
+  bertscore: 0.30
+  rouge_l: 0.20
+  judge_score: 0.50
+
+mlflow:
+  experiment_name: llm-regression-guard
+  production_tag: production
