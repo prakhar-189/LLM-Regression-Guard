@@ -54,7 +54,7 @@ from rouge_score import rouge_scorer as rouge_scorer_lib
 #   dict : {
 #       "bertscore_f1" : float in [0.0, 1.0] — semantic similarity score.
 #                        Higher = more semantically similar to reference.
-#       "rouge_l"      : float in [0.0, 1.0] — lexical overlap score.
+#       "rougeL"      : float in [0.0, 1.0] — lexical overlap score.
 #                        Higher = more words/phrases shared with reference.
 #   }
 #
@@ -91,9 +91,9 @@ def compute_metrics(response: str, reference: str) -> dict:
     # ----------------------------------------------------------
     scorer       = rouge_scorer_lib.RougeScorer(["rougeL"], use_stemmer = True)
     rouge_result = scorer.score(reference, response)
-    rouge_l      = round(rouge_result["rouge_l"].fmeasure, 4)
+    rougeL      = round(rouge_result["rougeL"].fmeasure, 4)
 
     return{
         "bertscore_f1" : bertscore,
-        "rouge_l"      : rouge_l,
+        "rougeL"      : rougeL,
     }
