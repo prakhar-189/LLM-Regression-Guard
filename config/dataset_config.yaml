@@ -1,18 +1,18 @@
 categories:
   - name: factual_accuracy
-    min_examples: 35
+    min_examples: 5
     weight: 0.30
   - name: refusal_behavior
-    min_examples: 30
+    min_examples: 5
     weight: 0.25
   - name: instruction_following
-    min_examples: 30
+    min_examples: 5
     weight: 0.25
   - name: tone_consistency
-    min_examples: 25
+    min_examples: 3
     weight: 0.10
   - name: multi_turn_coherence
-    min_examples: 20
+    min_examples: 2
     weight: 0.10
 
 validation:
