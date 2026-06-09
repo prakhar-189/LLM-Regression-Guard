@@ -1,0 +1,66 @@
+name: LLM Quality Gate
+
+on:
+  push:
+    paths:
+      - "data/raw/prompts.jsonl"
+      - "config/scorer_config.yaml"
+      - "config/model_version.yaml"
+      - "scorer/**"
+      - "scripts/**"
+  pull_request:
+    paths:
+      - "data/raw/prompts.jsonl"
+      - "config/scorer_config.yaml"
+      - "config/model_version.yaml"
+      - "scorer/**"
+      - "scripts/**"
+  workflow_dispatch:  # allows manual trigger from GitHub UI
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build golden dataset
+        run: python scripts/build_dataset.py
+
+      - name: Run scorer
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MLFLOW_TRACKING_URI: ${{ vars.MLFLOW_TRACKING_URI }}
+        run: python scorer/run_scorer.py
+
+      - name: Check for regression
+        env:
+          MLFLOW_TRACKING_URI: ${{ vars.MLFLOW_TRACKING_URI }}
+        run: python scripts/check_regression.py
+
+      - name: Post scorecard to PR
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: python scripts/post_pr_comment.py
+
+      - name: Upload scores artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scores-${{ github.sha }}
+          path: scores_output/scores.json
+          retention-days: 30
