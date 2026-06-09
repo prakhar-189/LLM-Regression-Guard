@@ -1,0 +1,6 @@
+current_model: gpt-4o
+baseline_model: gpt-4o
+prompt_template_version: v1.0
+system_prompt_hash: ""
+last_updated: "2026-06-07"
+updated_by: ""
