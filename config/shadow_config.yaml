@@ -1,0 +1,12 @@
+shadow_percentage: 5
+routing_strategy: hash_based
+
+promotion:
+  min_window_days: 7
+  score_tolerance: 0.02
+  min_samples: 500
+
+scoring:
+  async_backend: celery
+  queue_name: shadow_eval
+  result_ttl: 604800
