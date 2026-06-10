@@ -98,7 +98,7 @@ def check_regression(
         sys.exit(1)
 
     current = json.load(open(scores_path))
-    print(f"\nModel under test : {current.get('nodel_version', 'unknown')}")
+    print(f"\nModel under test : {current.get('model_version', 'unknown')}")
     print(f"Current overall : {current['overall']}")
 
     # ------------------------------------------------
