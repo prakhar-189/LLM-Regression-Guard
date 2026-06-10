@@ -62,9 +62,9 @@ from typing import List
 #   - Red horizontal threshold line at y=0.80 shows pass/fail boundary.
 #   - Y-axis fixed at [0.5, 1.05] to keep changes visually clear.
 # ===============================================================
-def score_timeseries(df: pd.DataFrame) -> go.figure:
-    fig        = go.figure()
-    categories = df["category"].unique() if "category" in df.columns else[]
+def score_timeseries(df: pd.DataFrame) -> go.Figure:
+    fig        = go.Figure()
+    categories = df["category"].unique() if "category" in df.columns else []
 
     # Add overall score as a dashed reference line if present
     if "overall_score" in df.columns:
@@ -81,7 +81,7 @@ def score_timeseries(df: pd.DataFrame) -> go.figure:
     colors = px.colors.qualitative.Set2
     for i, cat in enumerate(categories):
         cat_df = df[df["category"] == cat]
-        fig.add_trace(go.scatter(
+        fig.add_trace(go.Scatter(
             x    = cat_df["timestamp"],
             y    = cat_df["score"],
             name = cat.replace("_", " ").title(),
@@ -145,23 +145,23 @@ def score_timeseries(df: pd.DataFrame) -> go.figure:
 #   pd.pivot_table with aggfunc="mean" handles cases where multiple
 #   runs exist for the same (category, model_version) combination.
 # ===============================================================
-def category_heatmap(df: pd.Dataframe) -> go.figure:
+def category_heatmap(df: pd.DataFrame) -> go.Figure:
     if df.empty or "model_version" not in df.columns:
-        fig = go.figure()
+        fig = go.Figure()
         fig.update_layout(title = "No data available for Heatmap")
         return fig
     
     # Pivot : rows = categories, columns = model versions, values = mean score
     pivot = df.pivot_table(
         index   = "category",
-        columns = "modle_version",
+        columns = "model_version",
         values  = "score",
         aggfunc = "mean",
     )
 
     fig = px.imshow(
         pivot,
-        color_continous_scale = "RdYlGn",   # Red = Bad, Yellow = Borderline, Green = Good
+        color_continuous_scale = "RdYlGn",   # Red = Bad, Yellow = Borderline, Green = Good
         zmin                  = 0.60,       # Color scale minimum
         zmax                  = 1.00,       # Color scale maximum
         title                 = "Category x Model Version Heatmap",
