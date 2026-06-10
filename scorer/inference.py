@@ -115,4 +115,4 @@ def run_inference(
     )
 
     # Extract & return just the text content from the response object
-    return response.choices[0].messages.content    
+    return response.choices[0].message.content
