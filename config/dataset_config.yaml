@@ -18,3 +18,5 @@ categories:
 validation:
   require_reference_response: true
   max_prompt_tokens: 512
+
+  # Add a comment line to model_version.yaml"# trigger CI" 
