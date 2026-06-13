@@ -111,7 +111,7 @@ def run_inference(
         model       = model,
         messages    = messages,
         temperature = temperature,
-        max_tokens  = max_tokens,
+        max_completion_tokens  = max_tokens,    # <- Changed Parameter
     )
 
     # Extract & return just the text content from the response object
