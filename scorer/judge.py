@@ -146,7 +146,7 @@ def judge_score(
         model      = judge_model,
         messages   = [{"role": "user", "content": filled_prompt}],
         temperature= temperature,
-        max_tokens = 300,
+        max_completion_tokens = 300,      # <- Changed Parameter
     )
  
     raw_text = result.choices[0].message.content.strip()
