@@ -63,6 +63,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
 # Add project root to sys.path so scorer package is importable when
 # run directly as a script (not as a module).
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
