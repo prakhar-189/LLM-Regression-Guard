@@ -36,8 +36,11 @@
 #                   -> ROUGE-L uses longest common subsequence (LCS) and
 #                      is more robust to word reordering than ROUGE-1/2.
 # ===============================================================
+import os
 from bert_score import score as bert_score_fn
 from rouge_score import rouge_scorer as rouge_scorer_lib
+
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 
 # # ===============================================================
@@ -91,9 +94,9 @@ def compute_metrics(response: str, reference: str) -> dict:
     # ----------------------------------------------------------
     scorer       = rouge_scorer_lib.RougeScorer(["rougeL"], use_stemmer = True)
     rouge_result = scorer.score(reference, response)
-    rougeL      = round(rouge_result["rougeL"].fmeasure, 4)
+    rouge_l      = round(rouge_result["rougeL"].fmeasure, 4)
 
     return{
         "bertscore_f1" : bertscore,
-        "rougeL"      : rougeL,
+        "rouge_l"      : rouge_l,
     }
