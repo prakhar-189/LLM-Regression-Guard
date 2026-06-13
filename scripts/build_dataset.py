@@ -42,6 +42,7 @@
 # ===============================================================
 import json
 import sys
+from pathlib import Path
 
 # Add project root to path so dataset package is importable
 # when this script is run directly (not as a module).
@@ -49,7 +50,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 
 import yaml
-from pathlib import Path
 from dataset.schema import GoldenExample
 from dataset.validator import validate_dataset
 from pydantic import ValidationError
