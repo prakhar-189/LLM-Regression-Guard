@@ -19,4 +19,4 @@ validation:
   require_reference_response: true
   max_prompt_tokens: 512
 
-  # Add a comment line to model_version.yaml"# trigger CI" 
+  # Adding a comment line to dataset_config.yaml"# trigger CI" 
