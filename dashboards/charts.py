@@ -96,7 +96,7 @@ def score_timeseries(df: pd.DataFrame) -> go.Figure:
         version_change_times = df.drop_duplicates("model_version")["timestamp"].tolist()
         for ts in version_change_times:
             fig.add_vline(
-                x                    = ts,
+                x                    = ts.timestamp() * 1000,    # Convert to epoch ms
                 line_dash            = "dot",
                 line_color           = "rgba(255,100,100,0.5)",
                 annotation_text      = "version bump",
