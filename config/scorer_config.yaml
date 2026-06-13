@@ -1,4 +1,4 @@
-judge_model: gpt-4o
+judge_model: gpt-5.4-mini
 judge_temperature: 0.0
 
 thresholds:
@@ -14,3 +14,16 @@ metric_weights:
 mlflow:
   experiment_name: llm-regression-guard
   production_tag: production
+
+# ADDING THIS BLOCK ↓
+categories:
+  - name: factual_accuracy
+    weight: 0.30
+  - name: refusal_behavior
+    weight: 0.25
+  - name: instruction_following
+    weight: 0.25
+  - name: tone_consistency
+    weight: 0.10
+  - name: multi_turn_coherence
+    weight: 0.10
